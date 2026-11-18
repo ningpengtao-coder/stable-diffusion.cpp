@@ -1532,6 +1532,7 @@ namespace LLM {
             decay      = ggml_mul(c, decay, a);
             decay      = ggml_reshape_4d(c, decay, 1, value_heads, n, 1);
             auto state = ggml_ext_zeros(ctx, head_dim, head_dim, value_heads, 1);
+            // K=1 表示只输出最终状态。
             auto out   = ggml_gated_delta_net(c, q, k, v, decay, beta, state, 1);
             out        = ggml_view_3d(c, out, head_dim, value_heads, n, head_dim * sizeof(float), head_dim * value_heads * sizeof(float), 0);
             out        = std::dynamic_pointer_cast<LLMRMSNorm>(blocks["norm"])->forward(ctx, out);
